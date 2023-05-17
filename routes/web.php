@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\TiketController;
+use App\Http\Controllers\admin\TiketSoldController;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\user\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,5 +37,10 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/', [TiketController::class, 'index'])->name('tiket');
         Route::post('/store', [TiketController::class, 'store'])->name('tiketStore');
         Route::delete('/destroy/{id}', [TiketController::class, 'destroy'])->name('deleteTiket');
+        Route::get('/terjual', [TiketSoldController::class, 'index'])->name('tiket-terjual');
+        Route::get('/checkin', [TiketController::class, 'checkin'])->name('tiket-checkin');
+    });
+    Route::prefix('user')->group(function() {
+        Route::post('/create', [UserController::class, 'storeTiket'])->name('buyTiket');
     });
 });

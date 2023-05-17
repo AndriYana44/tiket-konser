@@ -39,10 +39,10 @@
                     <td>Rp.{{ number_format($item->price,2,',','.') }}</td>
                     <td>{{ $item->created_at }}</td>
                     <td>
-                        <form class="d-inline" action="{{ route('deleteTiket', $item->id) }}" method="POST">
+                        <form class="d-inline form-delete-{{ $item->id }}" action="{{ route('deleteTiket', $item->id) }}" method="POST">
                             @csrf
                             @method('delete')
-                            <button type="submit" class="badge badge-danger delete mr-2" style="border:none">
+                            <button type="submit" data-id="{{ $item->id }}" class="badge badge-danger delete mr-2" style="border:none">
                                 Delete <i class="fa fa-trash"></i>
                             </button>
                         </form>
@@ -75,10 +75,10 @@
                     <label for="jenis">Jenis Tiket</label>
                     <select name="jenis" id="jenis" class="form-control">
                         <option value=""></option>
-                        <option data-harga="500000" value="regular">Regular</option>
-                        <option data-harga="1000000" value="vip">vip</option>
-                        <option data-harga="1500000" value="golden">Golden Circle</option>
-                        <option data-harga="3000000" value="tribun">Tiket Tribun</option>
+                        <option data-harga="500000" data-type="04" value="regular">Regular</option>
+                        <option data-harga="1000000" data-type="03" value="vip">vip</option>
+                        <option data-harga="1500000" data-type="02" value="golden">Golden Circle</option>
+                        <option data-harga="3000000" data-type="01" value="tribun">Tiket Tribun</option>
                     </select>
                 </div>
                 <div class="input-group mb-3">
@@ -114,16 +114,13 @@
 @section('script')
   <script>
     $(document).ready(function() {
-        @if($message = Session::get('success'))
-            swal({{ $message }}, "success");
-        @endif
-        
         $('#jenis').select2({ 
             placeholder: 'pilih jenis tiket',
             width: '100%' 
         });
 
         $(document).on('change', '#jenis', function(e) {
+            $('.generate-number').removeAttr('disabled');
             let price = $(this).find(':selected').data('harga');
             $('.harga').each(function(i,v) {
                 $(v).val( i == 0 ? ` Rp.${number_format(price)}` : price );
@@ -131,9 +128,26 @@
         });
 
         $(document).on('click', '.generate-number', function(e) {
+            let typeid = $('#jenis').find(':selected').data('type');
             let iid = Math.floor(100000000 + Math.random() * 900000000);
-            $('.input-generate').val(iid);
+            $('.input-generate').val(`T${typeid}-${iid}`);
             $(this).attr('disabled', 'on');
+        });
+
+        $(document).on('click', '.delete', function(e) {
+          e.preventDefault();
+          const id = $(e.target).data('id');
+          swal({
+            text: "Lanjutkan untuk menghapus tiket?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              $(`.form-delete-${id}`).submit();
+            }
+          });
         });
     });
   </script>

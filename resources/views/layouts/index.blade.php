@@ -121,13 +121,13 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item menu-open">
-            <a href="{{ route(auth()->user()->is_admin ? 'dashboardAdmin' : 'dashboardUser') }}" class="nav-link active">
+            <a href="{{ route(auth()->user()->is_admin ? 'dashboardAdmin' : 'dashboardUser') }}" class="nav-link {{ currentRoute() == route('dashboardAdmin') ? 'active' : '' }}">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('tiket') }}" class="nav-link">
+            <a href="{{ route('tiket') }}" class="nav-link {{ currentRoute() == route('tiket') ? 'active' : '' }}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Tiket Tersedia
@@ -135,7 +135,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('tiket-terjual') }}" class="nav-link {{ currentRoute() == route('tiket-terjual') ? 'active' : '' }}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Tiket Terjual
@@ -143,7 +143,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link {{ currentRoute() == route('tiket-checkin') ? 'active' : '' }}">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Tiket Checkin
